@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% block title %}Verify File{% endblock %}
+{% block content %}
+<div class="bg-white p-6 rounded-lg shadow-lg max-w-lg mx-auto w-full">
+  <h1 class="text-2xl font-semibold text-gray-800 mb-4">Verify File</h1>
+  {% if error %}
+    <p class="text-red-600 bg-red-100 p-3 rounded-md mb-4">{{ error }}</p>
+  {% else %}
+    <p class="text-gray-600 mb-4">Enter a certificate ID to view the QR code or download the CSV file.</p>
+    <form method="GET" action="/verify" class="space-y-4 mb-6">
+      <div>
+        <label for="certificate_id" class="block text-sm font-medium text-gray-700">Certificate ID</label>
+        <input type="text" name="certificate_id" placeholder="Enter Certificate ID" class="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:ring-accent focus:border-accent transition">
+      </div>
+      <button type="submit" class="w-full bg-accent text-white px-4 py-2 rounded-md hover:bg-blue-500 transition">Generate QR Code</button>
+    </form>
+    {% if certificate_id %}
+      <div class="text-center">
+        <img src="/static/qrcodes/{{ certificate_id }}.png" alt="QR Code" class="mx-auto mb-4 w-48 h-48" onerror="this.alt='QR Code not found'; this.src=''; this.nextElementSibling.textContent='QR Code not found';">
+        <p class="text-gray-600 mb-4">Scan the QR code with your phone to download the CSV file.</p>
+        <a href="/verify_download/{{ certificate_id }}" class="inline-block bg-accent text-white px-4 py-2 rounded-md hover:bg-blue-500 transition">Download CSV Manually</a>
+      </div>
+    {% endif %}
+  {% endif %}
+</div>
+{% endblock %}

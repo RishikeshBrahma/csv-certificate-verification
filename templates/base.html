@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}File Upload & Verification{% endblock %}</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            'primary': '#1E3A8A',
+            'primary-dark': '#1E293B',
+            'accent': '#3B82F6',
+          },
+        },
+      },
+    }
+  </script>
+  <!-- Heroicons for icons -->
+  <script src="https://unpkg.com/@heroicons/react@2.0.13/dist/heroicons.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Inter', sans-serif; }
+    .sidebar { transform: translateX(-100%); transition: transform 0.3s ease-in-out; }
+    .sidebar-open { transform: translateX(0); }
+  </style>
+</head>
+<body class="bg-gray-50 text-gray-900">
+  <!-- Header -->
+  <header class="bg-primary text-white sticky top-0 z-20 shadow-lg">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center">
+      <!-- Hamburger Menu -->
+      <button class="sidebar-toggle focus:outline-none mr-4" onclick="document.querySelector('.sidebar').classList.toggle('sidebar-open')">
+        <svg class="w-8 h-8 text-white hover:text-accent transition" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+        </svg>
+      </button>
+      <h1 class="text-2xl font-bold">Certificate System</h1>
+    </div>
+  </header>
+
+  <div class="flex min-h-screen">
+    <!-- Sidebar -->
+    <aside class="sidebar fixed inset-y-0 left-0 w-64 bg-primary-dark text-white flex flex-col shadow-xl z-10">
+      <div class="p-6 text-xl font-semibold border-b border-gray-700 flex items-center">
+        <svg class="w-6 h-6 mr-2 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+        </svg>
+        Menu
+      </div>
+      <nav class="flex-1">
+        <a href="/" class="flex items-center p-4 hover:bg-accent transition-colors rounded-r-lg {% if request.path == '/' %}bg-accent{% endif %}">
+          <svg class="w-5 h-5 mr-2 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
+          </svg>
+          Home
+        </a>
+        <a href="/upload" class="flex items-center p-4 hover:bg-accent transition-colors rounded-r-lg {% if request.path == '/upload' %}bg-accent{% endif %}">
+          <svg class="w-5 h-5 mr-2 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 0115.9 6M15.9 6L13 13m0 0l-3 3m3-3v6"></path>
+          </svg>
+          Upload File
+        </a>
+        <a href="/verify" class="flex items-center p-4 hover:bg-accent transition-colors rounded-r-lg {% if request.path == '/verify' %}bg-accent{% endif %}">
+          <svg class="w-5 h-5 mr-2 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+          </svg>
+          Verify File
+        </a>
+      </nav>
+      <!-- Toggle Switch -->
+      <div class="p-4 border-t border-gray-700">
+        <label class="flex items-center space-x-2">
+          <span class="text-sm font-medium">Toggle Theme</span>
+          <input type="checkbox" class="toggle-checkbox" id="theme-toggle" class="sr-only">
+          <div class="relative inline-block w-10 h-6 bg-gray-600 rounded-full shadow-inner">
+            <span class="absolute left-1 top-1 w-4 h-4 bg-white rounded-full transition-transform duration-200 ease-in-out shadow-sm" id="theme-toggle-knob"></span>
+          </div>
+        </label>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="flex-1 p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto w-full transition-all duration-300">
+      {% if request.path == '/' %}
+        <h1 class="text-2xl font-semibold text-gray-800 mb-4">How to Create a CSV File</h1>
+        <div class="bg-white p-6 rounded-lg shadow-lg">
+          <p class="text-gray-600 mb-4">To upload certificate data, create a CSV file with the following required columns:</p>
+          <ul class="list-disc pl-5 mb-4 text-gray-700">
+            <li><strong>Columns</strong>: <code>certificate_id</code>, <code>recipient_name</code>, <code>course_title</code>, <code>issue_date</code></li>
+            <li><strong>Format</strong>: Use a text editor (e.g., Notepad) or spreadsheet software (e.g., Excel) to create the CSV.</li>
+          </ul>
+          <p class="text-gray-600">Save the file with a <code>.csv</code> extension (e.g., <code>certificates.csv</code>) and upload it via the <a href="/upload" class="text-accent hover:underline">Upload File</a> page.</p>
+        </div>
+      {% endif %}
+      {% block content %}{% endblock %}
+    </main>
+  </div>
+
+  <!-- Footer -->
+  <footer class="bg-primary text-white text-center py-4">
+    <p>© 2025 Certificate System. All rights reserved.</p>
+  </footer>
+
+  <script>
+    // Toggle sidebar on link click
+    document.querySelectorAll('.sidebar a').forEach(link => {
+      link.addEventListener('click', () => {
+        document.querySelector('.sidebar').classList.remove('sidebar-open');
+      });
+    });
+    // Toggle switch functionality
+    const toggleCheckbox = document.getElementById('theme-toggle');
+    const toggleKnob = document.getElementById('theme-toggle-knob');
+    if (toggleCheckbox && toggleKnob) {
+      toggleCheckbox.addEventListener('change', () => {
+        if (toggleCheckbox.checked) {
+          toggleKnob.style.transform = 'translateX(1.5rem)';
+          // Add theme toggle logic here (e.g., dark mode)
+        } else {
+          toggleKnob.style.transform = 'translateX(0)';
+          // Add theme toggle logic here (e.g., light mode)
+        }
+      });
+    }
+  </script>
+</body>
+</html>

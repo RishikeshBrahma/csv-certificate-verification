@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% block title %}Upload File{% endblock %}
+{% block content %}
+<div class="bg-white p-6 rounded-lg shadow-lg max-w-lg mx-auto w-full">
+  <h1 class="text-2xl font-semibold text-gray-800 mb-4">Upload CSV File</h1>
+  <form method="POST" action="/upload" enctype="multipart/form-data" class="space-y-4">
+    <div>
+      <label for="csv_file" class="block text-sm font-medium text-gray-700">Select CSV File</label>
+      <input type="file" name="csv_file" accept=".csv" class="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:ring-accent focus:border-accent transition">
+    </div>
+    <button type="submit" class="w-full bg-accent text-white px-4 py-2 rounded-md hover:bg-blue-500 transition">Upload</button>
+  </form>
+  {% if error %}
+    <p class="mt-4 text-red-600 bg-red-100 p-3 rounded-md">{{ error }}</p>
+  {% endif %}
+  {% if success %}
+    <p class="mt-4 text-green-600 bg-green-100 p-3 rounded-md">{{ success }}</p>
+  {% endif %}
+</div>
+{% endblock %}
